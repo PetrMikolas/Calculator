@@ -2,6 +2,7 @@
 using FluentAssertions;
 
 namespace Calculator.UnitTests;
+
 internal class CalculatorTests
 {
     private CalculatorComponent _calculator;
