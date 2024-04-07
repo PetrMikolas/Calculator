@@ -1,0 +1,49 @@
+﻿<style>
+    .spinner-container {
+    width: 157px;
+    height: 157px;
+    text-align: center;
+    margin: auto;
+}
+
+.spinner {
+    border: 5px solid #94B6E5;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    position: relative;
+    border-radius: 50%;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    animation: 0.7s linear infinite rotate;
+}
+
+@@keyframes rotate {
+    0% {
+        transform: rotateZ(-360deg)
+    }
+
+    100% {
+        transform: rotateZ(0deg)
+    }
+}
+
+#spinner-text {
+    color: black;
+    font-family: Arial;
+    font-size: 18px;
+    position: relative;
+    top: 63px; /* čím vyšší číslo, tím níže bude text umístěn ve spinneru */
+}
+</style>
+
+@if (!Visible) return;
+
+<div class="spinner-container">
+    <span id="spinner-text">Načítání...</span>
+    <div class="spinner"></div>
+</div>
+
+@code {
+    [Parameter] public bool Visible { get; set; } = true;
+}

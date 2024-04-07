@@ -1,0 +1,83 @@
+﻿@page "/"
+@using Calculator.Shared
+@inject Calculator.Shared.CalculatorGrpc.CalculatorGrpcClient GrpcClient
+@rendermode InteractiveAuto
+
+<PageTitle>Kalkulačka</PageTitle>
+
+<div class="mt-4 mb-0 ms-3 me-3 pb-0" style="text-align:center">
+
+    <CalculatorComponent OnCalculate="@OnCalculateAsync" />
+
+    <History Examples="@_examples"
+             IsLoading=@_isVisibleLoadingSpinner />
+
+    <p class="text-danger mt-3">@_errorMessage</p>
+</div>
+
+@code {
+    private string _examples = string.Empty;
+    private string _errorMessage = string.Empty;
+    private bool _isVisibleLoadingSpinner = true;
+
+    /// <summary>
+    /// Handles the calculation event asynchronously.
+    /// </summary>
+    /// <param name="example">The calculation example.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task OnCalculateAsync(string example)
+    {
+        await SaveExampleAsync(example);
+        await GetExamplesAsync();
+    }
+
+    /// <summary>
+    /// Asynchronously saves a calculation example using a gRPC client.
+    /// </summary>
+    /// <param name="example">The calculation example to be saved.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task SaveExampleAsync(string example)
+    {
+        try
+        {
+            await GrpcClient.SaveExampleAsync(new SaveExampleRequest() { Example = example });
+        }
+        catch (Exception)
+        {
+            _errorMessage = "Neočekávaná chyba při ukládání vypočítaného příkladu. Zkuste to prosím znovu.";
+        }
+    }
+
+    /// <summary>
+    /// Asynchronously retrieves calculation examples using a gRPC client.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task GetExamplesAsync()
+    {
+        try
+        {
+            var result = await GrpcClient.GetExamplesAsync(new Google.Protobuf.WellKnownTypes.Empty());
+            _examples = String.Join("\n", result.Examples);
+        }
+        catch (Exception)
+        {
+            _errorMessage = "Nepodařilo se načíst seznam vypočítaných příkladů. Zkuste prosím znovu načíst stránku.";
+        }
+    }
+
+    /// <summary>
+    /// Executes after the component has been rendered.
+    /// </summary>
+    /// <param name="firstRender">Indicates whether this is the first render of the component.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await GetExamplesAsync();
+            _isVisibleLoadingSpinner = false;
+
+            StateHasChanged();
+        }
+    }
+}

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "Calculator.Shared";
+
+import "google/protobuf/empty.proto";
+
+service CalculatorGrpc{
+	rpc SaveExample (SaveExampleRequest) returns (google.protobuf.Empty);	
+	rpc GetExamples (google.protobuf.Empty) returns (GetExamplesResponse);	
+}
+
+message SaveExampleRequest{	
+	string Example = 1;	
+}
+
+message GetExamplesResponse{
+	repeated string Examples = 1;
+}

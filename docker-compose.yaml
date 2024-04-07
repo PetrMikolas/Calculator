@@ -1,0 +1,14 @@
+version: "3" 
+
+services:  
+  calculator:    
+    container_name: calculator
+    image: dockerhub.petrmikolas.cz/calculator:latest   
+    environment:
+     - ASPNETCORE_ENVIRONMENT=Production    
+     - LANG=C.UTF-8   
+    restart: unless-stopped      
+    ports:
+      - 7600:8080  
+      - 7601:8081   
+    network_mode: bridge     

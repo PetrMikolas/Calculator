@@ -1,0 +1,356 @@
+﻿<div style="width:293px; height:392px; display: inline-block; user-select:none;">
+	<table class="table table-bordered mb-0" style="width:292px;">
+		<tbody>
+			<tr>
+				<td style="text-align:right; padding:2px 20px;" height="29px" colspan="4">
+					@displayExpression
+				</td>
+			</tr>
+
+			<tr>
+				<td style="text-align:center" colspan="4">
+					<input type="text" style="text-align:right; background-color:#CBEAA1;" class="sirkadisplej p-2" value="@displayResult" readonly>
+				</td>
+			</tr>
+
+			<tr>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("1"))'>1</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("2"))'>2</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("3"))'>3</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-info sirkatlacitko p-0" style="font-size: 24px;" @onclick='(() => GetArithmeticOperation(ArithmeticOperation.Addition))'>+</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("4"))'>4</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("5"))'>5</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("6"))'>6</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-info sirkatlacitko p-0" style="font-size: 24px;" @onclick='(() => GetArithmeticOperation(ArithmeticOperation.Subtraction))'>-</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("7"))'>7</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("8"))'>8</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("9"))'>9</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-info sirkatlacitko p-0" style="font-size: 24px;" @onclick='(() => GetArithmeticOperation(ArithmeticOperation.Multiplication))'>×</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("0"))'>0</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar(","))'>,</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-danger sirkatlacitko" @onclick="Reset">C</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-info sirkatlacitko p-0" style="font-size: 24px;" @onclick='(() => GetArithmeticOperation(ArithmeticOperation.Division))'>÷</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td style="text-align: center; vertical-align: middle; padding:5px; height:35px" colspan="4">
+					<input type="checkbox" id="celecislo" style="height:13px; margin-right:8px" @bind="isResultInteger">
+					<label for="celecislo">Výsledek celé číslo</label>
+				</td>
+			</tr>
+
+			<tr>
+				<td style="text-align:center" colspan="4">
+					<button type="button" class="btn btn-success sirkadisplej" @onclick="() => Calculate(number1String, number2String, arithmeticOperation, isResultInteger)">Spočítat</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+@code {
+	[Parameter] public EventCallback<string> OnCalculate { get; set; }
+
+	private string displayExpression = string.Empty;
+	private string displayResult = string.Empty;
+	private string number1String = string.Empty;
+	private string number2String = string.Empty;
+	private bool isResultInteger = false;
+	private ArithmeticOperation arithmeticOperation = default;
+
+	/// <summary>
+	/// Gets the currently inserted character
+	/// </summary>
+	/// <param name="character">Number or decimal point</param>
+	private void GetChar(string character)
+	{
+		// pokud je na displeji zobrazen předchozí výsledek a uživatel zadá znak, kalkulačka automaticky resetuje displej
+		if (displayResult != string.Empty && number1String == string.Empty && number2String == string.Empty && arithmeticOperation == ArithmeticOperation.None)
+		{
+			ResetDisplays();
+		}
+
+		// 1. číslo bude max. desetimístné
+		if (arithmeticOperation == ArithmeticOperation.None && number1String.Length < 10)
+		{
+			character = AddZeroBeforeDecimalPoint(character, number1String);
+
+			if (!IsValidCharAfterZero(character, number1String))
+			{
+				return;
+			}
+
+			if (!HasNumberOnlyOneDecimalPoint(character, number1String))
+			{
+				return;
+			}
+
+			number1String += character;
+
+			ShowCharOnDisplay(character);
+		}
+		// 2. číslo bude max. desetimístné
+		else if (arithmeticOperation != ArithmeticOperation.None && number2String.Length < 10)
+		{
+			character = AddZeroBeforeDecimalPoint(character, number2String);
+
+			if (!IsValidCharAfterZero(character, number2String))
+			{
+				return;
+			}
+
+			if (!HasNumberOnlyOneDecimalPoint(character, number2String))
+			{
+				return;
+			}
+
+			number2String += character;
+
+			ShowCharOnDisplay(character);
+		}
+	}
+
+	/// <summary>
+	/// Validates that if the 1st character entered is zero, a decimal point was entered as the 2nd character
+	/// </summary>
+	/// <param name="number">Number</param>
+	/// <param name="character">Char</param>
+	/// <returns>If the 2nd character is a decimal point true, otherwise false</returns>
+	private bool IsValidCharAfterZero(string character, string number)
+	{
+		if (number != string.Empty && number[0] == '0' && number.Length == 1 && character != ",")
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/// <summary>
+	/// if the user enters a decimal point as the 1st character, a zero is automatically added before the comma
+	/// </summary>
+	/// <param name="character">Character</param>
+	/// <returns>Character</returns>
+	private string AddZeroBeforeDecimalPoint(string character, string number)
+	{
+		if (character == "," && number == string.Empty)
+		{
+			return "0,";
+		}
+
+		return character;
+	}
+
+	/// <summary>
+	/// Validates whether the number has only one decimal point
+	/// </summary>
+	/// <param name="character">Character</param>
+	/// <param name="number">Number</param>
+	/// <returns>If the number contains only one decimal point true, otherwise false</returns>
+	private bool HasNumberOnlyOneDecimalPoint(string character, string number)
+	{
+		if (character == "," && number.Contains(","))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/// <summary>
+	/// Gets the currently specified arithmetic operation
+	/// </summary>
+	/// <param name="operation">Arithmetic operation</param>
+	private void GetArithmeticOperation(ArithmeticOperation operation)
+	{
+		// nedovolí zadat početní operaci, pokud bude zadána pouze nula a desetinná čárka
+		if (displayResult == "0,")
+		{
+			return;
+		}
+
+		if (number1String != string.Empty && arithmeticOperation == ArithmeticOperation.None && number2String == string.Empty)
+		{
+			arithmeticOperation = operation;
+			string arithmeticOperator = ConvertAritmeticOperationToArithmeticOperator(operation);
+
+			ShowCharOnDisplay(arithmeticOperator);
+		}
+	}
+
+	/// <summary>
+	/// Displays the entered character on the display
+	/// </summary>
+	/// <param name="character">Current character</param>
+	private void ShowCharOnDisplay(string character)
+	{
+		displayResult += character;
+	}
+
+	/// <summary>
+	/// Calculates the result.
+	/// The method has input values, return value and access modifier set to internal, so it can be tested.
+	/// </summary>
+	/// <param name="number1String">First number as string</param>
+	/// <param name="number2String">Second number as string</param>
+	/// <param name="operation">Arithmetic Operation</param>
+	/// <param name="isResultInteger">Boolean whether the result should be rounded to an integer. Default is false.</param>
+	/// <returns>Result as string</returns>
+	internal string Calculate(string number1String, string number2String, ArithmeticOperation operation, bool isResultInteger = false)
+	{
+		if (!String.IsNullOrEmpty(number1String) && !String.IsNullOrEmpty(number2String) && operation != ArithmeticOperation.None)
+		{
+			double result = 0;
+			double number1 = double.Parse(number1String);
+			double number2 = double.Parse(number2String);
+
+			number1String = number1 == 0 ? "0" : number1String;
+			number2String = number2 == 0 ? "0" : number2String;
+
+			switch (operation)
+			{
+				case ArithmeticOperation.Addition: result = number1 + number2; break;
+				case ArithmeticOperation.Subtraction: result = number1 - number2; break;
+				case ArithmeticOperation.Multiplication: result = number1 * number2; break;
+				case ArithmeticOperation.Division: result = number1 / number2; break;
+			}
+
+			if (result.Equals(double.NaN))
+			{
+				displayResult = "Nedefinovaný výsledek";
+				ResetValues();
+
+				return displayResult;
+			}
+
+			// double při dělení nulou vrací Infinity
+			if (double.IsInfinity(result))
+			{
+				displayResult = "Nelze dělit nulou";
+				ResetValues();
+
+				return displayResult;
+			}
+
+			if (isResultInteger)
+			{
+				displayResult = Math.Round(result, 0).ToString();
+			}
+			else
+			{
+				displayResult = Math.Round(result, 10).ToString();
+			}
+
+			string arithmeticOperator = ConvertAritmeticOperationToArithmeticOperator(operation);
+
+			displayExpression = $"{number1String} {arithmeticOperator} {number2String} =";
+			OnCalculate.InvokeAsync($"{displayExpression} {displayResult}");
+
+			ResetValues();
+		}
+
+		return displayResult;
+	}
+
+	/// <summary>
+	/// Resets displays and values
+	/// </summary>
+	private void Reset()
+	{
+		ResetDisplays();
+		ResetValues();
+	}
+
+	/// <summary>
+	/// Resets only displays
+	/// </summary>
+	private void ResetDisplays()
+	{
+		displayResult = string.Empty;
+		displayExpression = string.Empty;
+	}
+
+	/// <summary>
+	/// Resets only values
+	/// </summary>
+	private void ResetValues()
+	{
+		number1String = string.Empty;
+		number2String = string.Empty;
+		isResultInteger = false;
+		arithmeticOperation = ArithmeticOperation.None;
+	}
+
+	/// <summary>
+	/// Converts an arithmetic operation to an arithmetic operation operator
+	/// </summary>
+	/// <param name="operation">Arithmetic operation</param>
+	/// <returns>Operator arithmetic operations</returns>
+	private string ConvertAritmeticOperationToArithmeticOperator(ArithmeticOperation operation)
+	{
+		string arithmeticOperator = string.Empty;
+
+		switch (operation)
+		{
+			case ArithmeticOperation.Addition: arithmeticOperator = "+"; break;
+			case ArithmeticOperation.Subtraction: arithmeticOperator = "-"; break;
+			case ArithmeticOperation.Multiplication: arithmeticOperator = "×"; break;
+			case ArithmeticOperation.Division: arithmeticOperator = "÷"; break;
+		}
+
+		return arithmeticOperator;
+	}
+
+	/// <summary>
+	/// Basic arithmetic operations
+	/// </summary>
+	internal enum ArithmeticOperation
+	{
+		None = 0,
+		Addition = 1,
+		Subtraction = 2,
+		Multiplication = 3,
+		Division = 4,
+	}
+}
