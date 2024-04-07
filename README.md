@@ -8,6 +8,7 @@ Naprogramováno v jazyce C# v prostředí Microsoft .NET 8
 - API - gRPC
 - Databáze - Dapper/Stored procedures
 - Unit testy - NUnit
+- Sledování chyb - Sentry
 
 ![Screenshot](Screenshots/Calculator_1.png)
 ![Screenshot](Screenshots/Calculator_2.png)
