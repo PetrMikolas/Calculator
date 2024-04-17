@@ -63,8 +63,7 @@ public sealed class DatabaseService(ILogger<DatabaseService> logger, IConfigurat
         try
         {
             var connectionString = config.GetConnectionString("ExamplesDB") ?? throw new Exception($"Unable to load database connection");
-            var connection = new SqlConnection(connectionString);
-            return connection;
+            return new SqlConnection(connectionString);            
         }
         catch (Exception ex)
         {
