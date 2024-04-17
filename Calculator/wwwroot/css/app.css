@@ -102,12 +102,12 @@ a, .btn-link {
     display: none !important;
 }
 
-.sirkatlacitko {
+.button-width {
     min-width: 50px;
     max-width: 50px;
 }
 
-.sirkadisplej {
+.display-width {
     min-width: 270px;
     max-width: 270px;
 }

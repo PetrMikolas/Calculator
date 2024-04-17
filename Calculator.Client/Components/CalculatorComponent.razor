@@ -9,67 +9,67 @@
 
 			<tr>
 				<td style="text-align:center" colspan="4">
-					<input type="text" style="text-align:right; background-color:#CBEAA1;" class="sirkadisplej p-2" value="@displayResult" readonly>
+					<input type="text" style="text-align:right; background-color:#CBEAA1;" class="display-width p-2" value="@displayResult" readonly>
 				</td>
 			</tr>
 
 			<tr>
 				<td style="text-align:center">
-					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("1"))'>1</button>
+					<button type="button" class="btn btn-outline-dark button-width" @onclick='(() => GetChar("1"))'>1</button>
 				</td>
 				<td style="text-align:center">
-					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("2"))'>2</button>
+					<button type="button" class="btn btn-outline-dark button-width" @onclick='(() => GetChar("2"))'>2</button>
 				</td>
 				<td style="text-align:center">
-					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("3"))'>3</button>
+					<button type="button" class="btn btn-outline-dark button-width" @onclick='(() => GetChar("3"))'>3</button>
 				</td>
 				<td style="text-align:center">
-					<button type="button" class="btn btn-info sirkatlacitko p-0" style="font-size: 24px;" @onclick='(() => GetArithmeticOperation(ArithmeticOperation.Addition))'>+</button>
-				</td>
-			</tr>
-
-			<tr>
-				<td style="text-align:center">
-					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("4"))'>4</button>
-				</td>
-				<td style="text-align:center">
-					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("5"))'>5</button>
-				</td>
-				<td style="text-align:center">
-					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("6"))'>6</button>
-				</td>
-				<td style="text-align:center">
-					<button type="button" class="btn btn-info sirkatlacitko p-0" style="font-size: 24px;" @onclick='(() => GetArithmeticOperation(ArithmeticOperation.Subtraction))'>-</button>
+					<button type="button" class="btn btn-info button-width p-0" style="font-size: 24px;" @onclick='(() => GetArithmeticOperation(ArithmeticOperation.Addition))'>+</button>
 				</td>
 			</tr>
 
 			<tr>
 				<td style="text-align:center">
-					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("7"))'>7</button>
+					<button type="button" class="btn btn-outline-dark button-width" @onclick='(() => GetChar("4"))'>4</button>
 				</td>
 				<td style="text-align:center">
-					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("8"))'>8</button>
+					<button type="button" class="btn btn-outline-dark button-width" @onclick='(() => GetChar("5"))'>5</button>
 				</td>
 				<td style="text-align:center">
-					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("9"))'>9</button>
+					<button type="button" class="btn btn-outline-dark button-width" @onclick='(() => GetChar("6"))'>6</button>
 				</td>
 				<td style="text-align:center">
-					<button type="button" class="btn btn-info sirkatlacitko p-0" style="font-size: 24px;" @onclick='(() => GetArithmeticOperation(ArithmeticOperation.Multiplication))'>×</button>
+					<button type="button" class="btn btn-info button-width p-0" style="font-size: 24px;" @onclick='(() => GetArithmeticOperation(ArithmeticOperation.Subtraction))'>-</button>
 				</td>
 			</tr>
 
 			<tr>
 				<td style="text-align:center">
-					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar("0"))'>0</button>
+					<button type="button" class="btn btn-outline-dark button-width" @onclick='(() => GetChar("7"))'>7</button>
 				</td>
 				<td style="text-align:center">
-					<button type="button" class="btn btn-outline-dark sirkatlacitko" @onclick='(() => GetChar(","))'>,</button>
+					<button type="button" class="btn btn-outline-dark button-width" @onclick='(() => GetChar("8"))'>8</button>
 				</td>
 				<td style="text-align:center">
-					<button type="button" class="btn btn-danger sirkatlacitko" @onclick="Reset">C</button>
+					<button type="button" class="btn btn-outline-dark button-width" @onclick='(() => GetChar("9"))'>9</button>
 				</td>
 				<td style="text-align:center">
-					<button type="button" class="btn btn-info sirkatlacitko p-0" style="font-size: 24px;" @onclick='(() => GetArithmeticOperation(ArithmeticOperation.Division))'>÷</button>
+					<button type="button" class="btn btn-info button-width p-0" style="font-size: 24px;" @onclick='(() => GetArithmeticOperation(ArithmeticOperation.Multiplication))'>×</button>
+				</td>
+			</tr>
+
+			<tr>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-outline-dark button-width" @onclick='(() => GetChar("0"))'>0</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-outline-dark button-width" @onclick='(() => GetChar(","))'>,</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-danger button-width" @onclick="Reset">C</button>
+				</td>
+				<td style="text-align:center">
+					<button type="button" class="btn btn-info button-width p-0" style="font-size: 24px;" @onclick='(() => GetArithmeticOperation(ArithmeticOperation.Division))'>÷</button>
 				</td>
 			</tr>
 
@@ -82,7 +82,7 @@
 
 			<tr>
 				<td style="text-align:center" colspan="4">
-					<button type="button" class="btn btn-success sirkadisplej" @onclick="() => Calculate(number1String, number2String, arithmeticOperation, isResultInteger)">Spočítat</button>
+					<button type="button" class="btn btn-success display-width" @onclick="() => Calculate(number1String, number2String, arithmeticOperation, isResultInteger)">Spočítat</button>
 				</td>
 			</tr>
 		</tbody>
